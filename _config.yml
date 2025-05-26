@@ -1,8 +1,1 @@
-# Site
-title: first's blog
-subtitle: ''
-description: Just Do It,But Not Just Do It.
-keywords:
-author: first_fan
-language: zh-CN
-timezone: ''
+theme: jekyll-theme-modernist
