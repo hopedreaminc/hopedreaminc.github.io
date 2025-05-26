@@ -1,3 +1,11 @@
+
+/* light-theme.css */
+body.light-theme {
+    background-color: #ffffff;
+    color: #000000;
+}
+ 
+/* dark-theme.css */
 body.dark-theme {
     background-color: #000000;
     color: #ffffff;
