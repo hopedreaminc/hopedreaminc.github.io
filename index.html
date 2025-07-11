@@ -1,89 +1,85 @@
 <!DOCTYPE html>
 <html>
  <head>
-  <title>蓝牙知识</title>
-  <style>
-     h1{
-      text-align: center;
-     }
+   <title>蓝牙知识</title>
+   <style>
+     h1{text-align: center;}
    </style>
- </head>
+  </head>
  <body>
   <h1>名次释义</h1>
   <p>
    <text>
-    /**
-     *中心设备：如手机
-     *外设：如蓝牙耳机
-     *广播：外设向外发送的广播，目的是为了让中心设备可以扫描到
-     *服务：外设的一个功能模块，一个外设有多个服务
-     *特征值：一个服务中的一个单位，一个服务有多个特征值
-     *uuid：区分不同服务和特征的唯一标识
-     *
-     ***********核心类：************
-     *CBCentralManager->中心设备管理类
-     *CBCentral->中心设备
-     *CBPeripheralManager->外设设备管理类
-     *CBPeripheral->外设设备
-     *CBUUID->外围设备服务特征的唯一标识
-     *CBService->外围设备的服务
-     *CBCharacteristic->外围设备的特征值
-     *
-     *
-     **********注意流程*************
-     *1、打开蓝牙，中心设备扫描外设的广播信息
-     *2、根据扫描的广播信息找到目标外设（可根据service的uuid来识别是不是目标设备）
-     *3、连接外设设备
-     *4、调用代理方法发现「服务」
-     *5、调用代理方法发现「服务」里的「特征」
-     *6、发现硬件用于传输数据的「特征」（app发送数据给硬件时，会用到这个「特征」）
-     *7、发现硬件用于数据输出的「特征」，进行「监听」（硬件就是从这个「特征」中发送数据给手机端）
-     *8、利用数据输入「特征」发送数据，或者等待数据输出「特征」发出来的数据
-     */
+     *中心设备：如手机<br>
+     *外设：如蓝牙耳机<br>
+     *广播：外设向外发送的广播，目的是为了让中心设备可以扫描到<br>
+     *服务：外设的一个功能模块，一个外设有多个服务<br>
+     *特征值：一个服务中的一个单位，一个服务有多个特征值<br>
+     *uuid：区分不同服务和特征的唯一标识<br>
+     
+     ***********核心类：************<br>
+     *CBCentralManager->中心设备管理类<br>
+     *CBCentral->中心设备<br>
+     *CBPeripheralManager->外设设备管理类<br>
+     *CBPeripheral->外设设备<br>
+     *CBUUID->外围设备服务特征的唯一标识<br>
+     *CBService->外围设备的服务<br>
+     *CBCharacteristic->外围设备的特征值<br>
+     
+     **********注意流程*************<br>
+     *1、打开蓝牙，中心设备扫描外设的广播信息<br>
+     *2、根据扫描的广播信息找到目标外设（可根据service的uuid来识别是不是目标设备）<br>
+     *3、连接外设设备<br>
+     *4、调用代理方法发现「服务」<br>
+     *5、调用代理方法发现「服务」里的「特征」<br>
+     *6、发现硬件用于传输数据的「特征」（app发送数据给硬件时，会用到这个「特征」）<br>
+     *7、发现硬件用于数据输出的「特征」，进行「监听」（硬件就是从这个「特征」中发送数据给手机端）<br>
+     *8、利用数据输入「特征」发送数据，或者等待数据输出「特征」发出来的数据<br>
+     
    </text>
   </p>
 
    <h1>示例代码</h1>
    <p>
     <text>
-      // 创建一个中心设备
-      CBCentralManager *centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];
-      // 已配对过的蓝牙外设
-      NSArray *list = [centralManager retrievePeripheralsWithIdentifiers:[[NSUUID alloc] init]];
-      // 扫描外设（如果参数为nil，标识扫描所有外设）
-      [centralManager scanForPeripheralsWithServices:nil options:nil];
-      // 停止扫描
-      [centralManager stopScan];
-      // 连接指定外设
-      [centralManager connectPeripheral:<#(nonnull CBPeripheral *)#> options:<#(nullable NSDictionary<NSString *,id> *)#>];
-      // 取消指定外设
-      [centralManager cancelPeripheralConnection:<#(nonnull CBPeripheral *)#>];
-      // 中心设备的蓝牙状态
-      centralManager.state;
+      // 创建一个中心设备<br>
+      CBCentralManager *centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];<br>
+      // 已配对过的蓝牙外设<br>
+      NSArray *list = [centralManager retrievePeripheralsWithIdentifiers:[[NSUUID alloc] init]];<br>
+      // 扫描外设（如果参数为nil，标识扫描所有外设）<br>
+      [centralManager scanForPeripheralsWithServices:nil options:nil];<br>
+      // 停止扫描<br>
+      [centralManager stopScan];<br>
+      // 连接指定外设<br>
+      [centralManager connectPeripheral:<#(nonnull CBPeripheral *)#> options:<#(nullable NSDictionary<NSString *,id> *)#>];<br>
+      // 取消指定外设<br>
+      [centralManager cancelPeripheralConnection:<#(nonnull CBPeripheral *)#>];<br>
+      // 中心设备的蓝牙状态<br>
+      centralManager.state;<br>
       
-      // *********外设设备相关属性*************
-      CBPeripheral *peripheral;
-      // 外设名称
-      peripheral.name;
-      // 外设信号强度
-      peripheral.RSSI;
-      // 外设设备连接状态
-      peripheral.state;
-      // 获取外设服务
-      peripheral.services;
-      // 发现服务
-      [peripheral discoverServices:<#(nullable NSArray<CBUUID *> *)#>];
-      // 发现子服务
-      [peripheral discoverIncludedServices:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];
-      // 发现特征
-      [peripheral discoverCharacteristics:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];
-      // 蓝牙发送数据有字节长度大小限制，该函数是获取允许最大字节长度限制
-      [peripheral maximumWriteValueLengthForType:<#(CBCharacteristicWriteType)#>];
-      // 发送数据
-      [peripheral writeValue:<#(nonnull NSData *)#> forCharacteristic:<#(nonnull CBCharacteristic *)#> type:<#(CBCharacteristicWriteType)#>];
-      // 发现特征的描述
-      [peripheral discoverDescriptorsForCharacteristic:<#(nonnull CBCharacteristic *)#>];
-      // 发送数据通过描述
+      // *********外设设备相关属性*************<br>
+      CBPeripheral *peripheral;<br>
+      // 外设名称<br>
+      peripheral.name;<br>
+      // 外设信号强度<br>
+      peripheral.RSSI;<br>
+      // 外设设备连接状态<br>
+      peripheral.state;<br>
+      // 获取外设服务<br>
+      peripheral.services;<br>
+      // 发现服务<br>
+      [peripheral discoverServices:<#(nullable NSArray<CBUUID *> *)#>];<br>
+      // 发现子服务<br>
+      [peripheral discoverIncludedServices:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];<br>
+      // 发现特征<br>
+      [peripheral discoverCharacteristics:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];<br>
+      // 蓝牙发送数据有字节长度大小限制，该函数是获取允许最大字节长度限制<br>
+      [peripheral maximumWriteValueLengthForType:<#(CBCharacteristicWriteType)#>];<br>
+      // 发送数据<br>
+      [peripheral writeValue:<#(nonnull NSData *)#> forCharacteristic:<#(nonnull CBCharacteristic *)#> type:<#(CBCharacteristicWriteType)#>];<br>
+      // 发现特征的描述<br>
+      [peripheral discoverDescriptorsForCharacteristic:<#(nonnull CBCharacteristic *)#>];<br>
+      // 发送数据通过描述<br>
       [peripheral writeValue:<#(nonnull NSData *)#> forDescriptor:<#(nonnull CBDescriptor *)#>];
     </text>
    </p>
@@ -91,34 +87,34 @@
    <h1>中心设备代理方法</h1>
    <p>
     <text>
-     // ****CBCentralManagerDelegate**** //
-     // 监听中心设备的状态
-     - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-     //    central.state:
-     //        CBManagerStateUnknown // 未知外设类型
-     //        CBManagerStateResetting // 正在重置蓝牙外设
-     //        CBManagerStateUnsupported
-     //        CBManagerStateUnauthorized
-     //        CBManagerStatePoweredOn
-     //        CBManagerStatePoweredOff;
-     }
+     // ****CBCentralManagerDelegate**** //<br>
+     // 监听中心设备的状态<br>
+     - (void)centralManagerDidUpdateState:(CBCentralManager *)central {<br>
+     //    central.state:<br>
+     //        CBManagerStateUnknown // 未知外设类型<br>
+     //        CBManagerStateResetting // 正在重置蓝牙外设<br>
+     //        CBManagerStateUnsupported<br>
+     //        CBManagerStateUnauthorized<br>
+     //        CBManagerStatePoweredOn<br>
+     //        CBManagerStatePoweredOff;<br>
+     }<br>
      
-     // 扫描到外设就会调用一次的代理方法
+     // 扫描到外设就会调用一次的代理方法<br>
      - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
          
-     }
+     }<br>
      
-     // 成功连接指定外设的代理回调
+     // 成功连接指定外设的代理回调<br>
      - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
          
-     }
+     }<br>
      
-     // 连接失败后的代理回调
+     // 连接失败后的代理回调<br>
      - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 连接外设失败后的代理回调
+     // 连接外设失败后的代理回调<br>
      - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
          
      }
@@ -128,59 +124,59 @@
    <h1>外设设备代理方法</h1>
    <p>
     <text>
-     // ****CBPeripheralDelegate**** //
-     // 外设名称改变的监听
+     // ****CBPeripheralDelegate**** //<br>
+     // 外设名称改变的监听<br>
      - (void)peripheralDidUpdateName:(CBPeripheral *)peripheral {
          
-     }
+     }<br>
      
-     // 服务修改的监听
+     // 服务修改的监听<br>
      - (void)didMoveToParentViewController:(UIViewController *)parent {
          
-     }
+     }<br>
      
-     // 信号强度的监听
+     // 信号强度的监听<br>
      - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error {
          
-     }
+     }<br>
      - (void)peripheral:(CBPeripheral *)peripheral didReadRSSI:(NSNumber *)RSSI error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 发现服务和子服务
+     // 发现服务和子服务<br>
      - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
          
-     }
+     }<br>
      - (void)peripheral:(CBPeripheral *)peripheral didDiscoverIncludedServicesForService:(CBService *)service error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 通过服务获取特征
+     // 通过服务获取特征<br>
      - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 特征发生改变后的监听
+     // 特征发生改变后的监听<br>
      - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 数据发送结果的回调
+     // 数据发送结果的回调<br>
      - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 发现描述通过特征
+     // 发现描述通过特征<br>
      - (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 描述值发送改变的监听
+     // 描述值发送改变的监听<br>
      - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
          
-     }
+     }<br>
      
-     // 发送描述结果的回调
+     // 发送描述结果的回调<br>
      - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
          
      }
@@ -190,5 +186,3 @@
  </body>
  
 </html>
-
-
