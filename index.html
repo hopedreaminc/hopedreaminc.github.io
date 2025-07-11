@@ -1,74 +1,94 @@
-// ***************************************蓝牙知识************************************
-/**
- *中心设备：如手机
- *外设：如蓝牙耳机
- *广播：外设向外发送的广播，目的是为了让中心设备可以扫描到
- *服务：外设的一个功能模块，一个外设有多个服务
- *特征值：一个服务中的一个单位，一个服务有多个特征值
- *uuid：区分不同服务和特征的唯一标识
- *
- ***********核心类：************
- *CBCentralManager->中心设备管理类
- *CBCentral->中心设备
- *CBPeripheralManager->外设设备管理类
- *CBPeripheral->外设设备
- *CBUUID->外围设备服务特征的唯一标识
- *CBService->外围设备的服务
- *CBCharacteristic->外围设备的特征值
- *
- *
- **********注意流程*************
- *1、打开蓝牙，中心设备扫描外设的广播信息
- *2、根据扫描的广播信息找到目标外设（可根据service的uuid来识别是不是目标设备）
- *3、连接外设设备
- *4、调用代理方法发现「服务」
- *5、调用代理方法发现「服务」里的「特征」
- *6、发现硬件用于传输数据的「特征」（app发送数据给硬件时，会用到这个「特征」）
- *7、发现硬件用于数据输出的「特征」，进行「监听」（硬件就是从这个「特征」中发送数据给手机端）
- *8、利用数据输入「特征」发送数据，或者等待数据输出「特征」发出来的数据
- */
+<!DOCTYPE html>
+<html>
+ <head><title>蓝牙知识</title>title</head>
+ <body>
+  <h1>名次释义</h1>
+  <p>
+   <text>
+    /**
+     *中心设备：如手机
+     *外设：如蓝牙耳机
+     *广播：外设向外发送的广播，目的是为了让中心设备可以扫描到
+     *服务：外设的一个功能模块，一个外设有多个服务
+     *特征值：一个服务中的一个单位，一个服务有多个特征值
+     *uuid：区分不同服务和特征的唯一标识
+     *
+     ***********核心类：************
+     *CBCentralManager->中心设备管理类
+     *CBCentral->中心设备
+     *CBPeripheralManager->外设设备管理类
+     *CBPeripheral->外设设备
+     *CBUUID->外围设备服务特征的唯一标识
+     *CBService->外围设备的服务
+     *CBCharacteristic->外围设备的特征值
+     *
+     *
+     **********注意流程*************
+     *1、打开蓝牙，中心设备扫描外设的广播信息
+     *2、根据扫描的广播信息找到目标外设（可根据service的uuid来识别是不是目标设备）
+     *3、连接外设设备
+     *4、调用代理方法发现「服务」
+     *5、调用代理方法发现「服务」里的「特征」
+     *6、发现硬件用于传输数据的「特征」（app发送数据给硬件时，会用到这个「特征」）
+     *7、发现硬件用于数据输出的「特征」，进行「监听」（硬件就是从这个「特征」中发送数据给手机端）
+     *8、利用数据输入「特征」发送数据，或者等待数据输出「特征」发出来的数据
+     */
+   </text>
+  </p>
+
+   <h1>示例代码</h1>
+   <p>
+    <text>
+      // 创建一个中心设备
+      CBCentralManager *centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];
+      // 已配对过的蓝牙外设
+      NSArray *list = [centralManager retrievePeripheralsWithIdentifiers:[[NSUUID alloc] init]];
+      // 扫描外设（如果参数为nil，标识扫描所有外设）
+      [centralManager scanForPeripheralsWithServices:nil options:nil];
+      // 停止扫描
+      [centralManager stopScan];
+      // 连接指定外设
+      [centralManager connectPeripheral:<#(nonnull CBPeripheral *)#> options:<#(nullable NSDictionary<NSString *,id> *)#>];
+      // 取消指定外设
+      [centralManager cancelPeripheralConnection:<#(nonnull CBPeripheral *)#>];
+      // 中心设备的蓝牙状态
+      centralManager.state;
+      
+      // *********外设设备相关属性*************
+      CBPeripheral *peripheral;
+      // 外设名称
+      peripheral.name;
+      // 外设信号强度
+      peripheral.RSSI;
+      // 外设设备连接状态
+      peripheral.state;
+      // 获取外设服务
+      peripheral.services;
+      // 发现服务
+      [peripheral discoverServices:<#(nullable NSArray<CBUUID *> *)#>];
+      // 发现子服务
+      [peripheral discoverIncludedServices:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];
+      // 发现特征
+      [peripheral discoverCharacteristics:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];
+      // 蓝牙发送数据有字节长度大小限制，该函数是获取允许最大字节长度限制
+      [peripheral maximumWriteValueLengthForType:<#(CBCharacteristicWriteType)#>];
+      // 发送数据
+      [peripheral writeValue:<#(nonnull NSData *)#> forCharacteristic:<#(nonnull CBCharacteristic *)#> type:<#(CBCharacteristicWriteType)#>];
+      // 发现特征的描述
+      [peripheral discoverDescriptorsForCharacteristic:<#(nonnull CBCharacteristic *)#>];
+      // 发送数据通过描述
+      [peripheral writeValue:<#(nonnull NSData *)#> forDescriptor:<#(nonnull CBDescriptor *)#>];
+    </text>
+   </p>
+  
+ </body>
+ 
+</html>
 
 
-// **********************************示例代码********************************************* //
- // 创建一个中心设备
-    CBCentralManager *centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];
-    // 已配对过的蓝牙外设
-    NSArray *list = [centralManager retrievePeripheralsWithIdentifiers:[[NSUUID alloc] init]];
-    // 扫描外设（如果参数为nil，标识扫描所有外设）
-    [centralManager scanForPeripheralsWithServices:nil options:nil];
-    // 停止扫描
-    [centralManager stopScan];
-    // 连接指定外设
-    [centralManager connectPeripheral:<#(nonnull CBPeripheral *)#> options:<#(nullable NSDictionary<NSString *,id> *)#>];
-    // 取消指定外设
-    [centralManager cancelPeripheralConnection:<#(nonnull CBPeripheral *)#>];
-    // 中心设备的蓝牙状态
-    centralManager.state;
-    
-    // *********外设设备相关属性*************
-    CBPeripheral *peripheral;
-    // 外设名称
-    peripheral.name;
-    // 外设信号强度
-    peripheral.RSSI;
-    // 外设设备连接状态
-    peripheral.state;
-    // 获取外设服务
-    peripheral.services;
-    // 发现服务
-    [peripheral discoverServices:<#(nullable NSArray<CBUUID *> *)#>];
-    // 发现子服务
-    [peripheral discoverIncludedServices:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];
-    // 发现特征
-    [peripheral discoverCharacteristics:<#(nullable NSArray<CBUUID *> *)#> forService:<#(nonnull CBService *)#>];
-    // 蓝牙发送数据有字节长度大小限制，该函数是获取允许最大字节长度限制
-    [peripheral maximumWriteValueLengthForType:<#(CBCharacteristicWriteType)#>];
-    // 发送数据
-    [peripheral writeValue:<#(nonnull NSData *)#> forCharacteristic:<#(nonnull CBCharacteristic *)#> type:<#(CBCharacteristicWriteType)#>];
-    // 发现特征的描述
-    [peripheral discoverDescriptorsForCharacteristic:<#(nonnull CBCharacteristic *)#>];
-    // 发送数据通过描述
-    [peripheral writeValue:<#(nonnull NSData *)#> forDescriptor:<#(nonnull CBDescriptor *)#>];
+
+
+
 
 
 
@@ -105,6 +125,8 @@
     
 }
 
+
+ 
 // ***************************************外设设备代理方法****************************** //
 // ****CBPeripheralDelegate**** //
 // 外设名称改变的监听
