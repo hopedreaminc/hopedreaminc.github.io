@@ -80,107 +80,108 @@
       [peripheral writeValue:<#(nonnull NSData *)#> forDescriptor:<#(nonnull CBDescriptor *)#>];
     </text>
    </p>
+
+   <h1>中心设备代理方法</h1>
+   <p>
+    <text>
+     // ****CBCentralManagerDelegate**** //
+     // 监听中心设备的状态
+     - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
+     //    central.state:
+     //        CBManagerStateUnknown // 未知外设类型
+     //        CBManagerStateResetting // 正在重置蓝牙外设
+     //        CBManagerStateUnsupported
+     //        CBManagerStateUnauthorized
+     //        CBManagerStatePoweredOn
+     //        CBManagerStatePoweredOff;
+     }
+     
+     // 扫描到外设就会调用一次的代理方法
+     - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
+         
+     }
+     
+     // 成功连接指定外设的代理回调
+     - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
+         
+     }
+     
+     // 连接失败后的代理回调
+     - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+         
+     }
+     
+     // 连接外设失败后的代理回调
+     - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+         
+     }
+    </text>
+   </p>
+
+   <h1>外设设备代理方法</h1>
+   <p>
+    <text>
+     // ****CBPeripheralDelegate**** //
+     // 外设名称改变的监听
+     - (void)peripheralDidUpdateName:(CBPeripheral *)peripheral {
+         
+     }
+     
+     // 服务修改的监听
+     - (void)didMoveToParentViewController:(UIViewController *)parent {
+         
+     }
+     
+     // 信号强度的监听
+     - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error {
+         
+     }
+     - (void)peripheral:(CBPeripheral *)peripheral didReadRSSI:(NSNumber *)RSSI error:(NSError *)error {
+         
+     }
+     
+     // 发现服务和子服务
+     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
+         
+     }
+     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverIncludedServicesForService:(CBService *)service error:(NSError *)error {
+         
+     }
+     
+     // 通过服务获取特征
+     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
+         
+     }
+     
+     // 特征发生改变后的监听
+     - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+         
+     }
+     
+     // 数据发送结果的回调
+     - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+         
+     }
+     
+     // 发现描述通过特征
+     - (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+         
+     }
+     
+     // 描述值发送改变的监听
+     - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
+         
+     }
+     
+     // 发送描述结果的回调
+     - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
+         
+     }
+    </text>
+   </p>
   
  </body>
  
 </html>
 
 
-
-
-
-
-
-
-// ***************************************中心设备代理方法****************************** //
-// ****CBCentralManagerDelegate**** //
-// 监听中心设备的状态
-- (void)centralManagerDidUpdateState:(CBCentralManager *)central {
-//    central.state:
-//        CBManagerStateUnknown // 未知外设类型
-//        CBManagerStateResetting // 正在重置蓝牙外设
-//        CBManagerStateUnsupported
-//        CBManagerStateUnauthorized
-//        CBManagerStatePoweredOn
-//        CBManagerStatePoweredOff;
-}
-
-// 扫描到外设就会调用一次的代理方法
-- (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI {
-    
-}
-
-// 成功连接指定外设的代理回调
-- (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-    
-}
-
-// 连接失败后的代理回调
-- (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
-    
-}
-
-// 连接外设失败后的代理回调
-- (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
-    
-}
-
-
- 
-// ***************************************外设设备代理方法****************************** //
-// ****CBPeripheralDelegate**** //
-// 外设名称改变的监听
-- (void)peripheralDidUpdateName:(CBPeripheral *)peripheral {
-    
-}
-
-// 服务修改的监听
-- (void)didMoveToParentViewController:(UIViewController *)parent {
-    
-}
-
-// 信号强度的监听
-- (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error {
-    
-}
-- (void)peripheral:(CBPeripheral *)peripheral didReadRSSI:(NSNumber *)RSSI error:(NSError *)error {
-    
-}
-
-// 发现服务和子服务
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
-    
-}
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverIncludedServicesForService:(CBService *)service error:(NSError *)error {
-    
-}
-
-// 通过服务获取特征
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
-    
-}
-
-// 特征发生改变后的监听
-- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    
-}
-
-// 数据发送结果的回调
-- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    
-}
-
-// 发现描述通过特征
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    
-}
-
-// 描述值发送改变的监听
-- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
-    
-}
-
-// 发送描述结果的回调
-- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
-    
-}
